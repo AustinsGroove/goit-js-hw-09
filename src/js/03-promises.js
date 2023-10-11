@@ -27,6 +27,7 @@ function submitHandler(ev) {
         console.log(`❌ Rejected promise ${position} in ${delay}ms`);
       });
   }
+  form.reset();
 }
 
 function createPromise(position, delay) {
@@ -39,6 +40,6 @@ function createPromise(position, delay) {
         reject({ position, delay });
       }
     }, delay);
-  })
-    return promise;
+  });
+  return promise;
 }

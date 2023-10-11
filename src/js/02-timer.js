@@ -10,30 +10,26 @@ const remainingMinutes = document.querySelector('span[data-minutes]');
 const remainingSeconds = document.querySelector('span[data-seconds]');
 let selectedUnixDate;
 let timer;
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    const date = new Date();
+    const unixDate = date.getTime();
+    selectedUnixDate = selectedDates[0].getTime();
+    if (selectedUnixDate <= unixDate) {
+      notifyChooseFutureDate();
+      return;
+    }
+    startBtn.removeAttribute('disabled');
+  },
+};
+flatpickr(datetimePicker, options);
 
-datetimePicker.addEventListener('focus', timeInputHandler);
 startBtn.addEventListener('click', startBtnHandler);
 startBtn.setAttribute('disabled', '');
-
-function timeInputHandler() {
-  const options = {
-    enableTime: true,
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-    onClose(selectedDates) {
-      const date = new Date();
-      const unixDate = date.getTime();
-      selectedUnixDate = selectedDates[0].getTime();
-      if (selectedUnixDate <= unixDate) {
-        notifyChooseFutureDate();
-        return;
-      }
-      startBtn.removeAttribute('disabled');
-    },
-  };
-  flatpickr(datetimePicker, options);
-}
 
 function startBtnHandler() {
   const date = new Date();
@@ -44,6 +40,7 @@ function startBtnHandler() {
   }
   timer = setInterval(timerFn, 1000);
   startBtn.setAttribute('disabled', '');
+  datetimePicker.setAttribute('disabled', '');
 }
 
 function timerFn() {
@@ -63,7 +60,7 @@ function timerFn() {
     remainingTimeObj.seconds === 0
   ) {
     clearInterval(timer);
-    startBtn.removeAttribute('disabled');
+    datetimePicker.removeAttribute('disabled');
   }
 }
 
